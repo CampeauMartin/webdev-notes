@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slugify Tool</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  #output {
+    margin-top: 20px;
+    font-size: 18px;
+  }
+</style>
+</head>
+<body>
+<h1>Slugify Tool</h1>
+<label for="inputText">Enter your text:</label><br>
+<textarea id="inputText" rows="4" cols="50"></textarea><br>
+<button onclick="generateSlug()">Generate</button>
+<div id="output"></div>
+
+<script>
+function generateSlug() {
+  var inputText = document.getElementById("inputText").value;
+  var words = inputText.trim().split(/\s+/);
+  var slug = "";
+
+  words.forEach(function(word) {
+    // Remove accents, punctuation, and replace apostrophes with a hyphen
+    var cleanWord = removeSpecialCharacters(word.toLowerCase());
+    // Ignore short words (less than 3 characters), but keep numbers
+    if (cleanWord.length >= 3 || !isNaN(cleanWord)) {
+      slug += cleanWord + "-";
+    }
+  });
+
+  slug = slug.slice(0, -1); // Remove the last '-'
+
+  document.getElementById("output").textContent = slug;
+}
+
+function removeSpecialCharacters(str) {
+  // Remove accents
+  var accents = {
+    "À": "A", "Á": "A", "Â": "A", "Ã": "A", "Ä": "A", "Å": "A", "à": "a", "á": "a", "â": "a", "ã": "a", "ä": "a", "å": "a",
+    "È": "E", "É": "E", "Ê": "E", "Ë": "E", "è": "e", "é": "e", "ê": "e", "ë": "e",
+    "Î": "I", "Ï": "I", "î": "i", "ï": "i",
+    "Ô": "O", "Ö": "O", "Ò": "O", "Ó": "O", "Õ": "O", "ô": "o", "ö": "o", "ò": "o", "ó": "o", "õ": "o",
+    "Ù": "U", "Ú": "U", "Û": "U", "Ü": "U", "ù": "u", "ú": "u", "û": "u", "ü": "u",
+    "Ÿ": "Y", "Ý": "Y", "ý": "y", "ÿ": "y",
+    "Ç": "C", "ç": "c",
+    "Ñ": "N", "ñ": "n"
+  };
+
+  var cleanStr = str.replace(/[ÀÁÂÃÄÅàáâãäåÈÉÊËèéêëÎÏîïÔÖÒÓÕôöòóõÙÚÛÜùúûüŸÝýÿÇçÑñ]/g, function(match) {
+    return accents[match];
+  });
+
+  // Remove punctuation and replace apostrophes with hyphens
+  cleanStr = cleanStr.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()\[\]'"?¿¡]/g, '').replace(/['’]/g, '-');
+
+  return cleanStr;
+}
+</script>
+</body>
+</html>
